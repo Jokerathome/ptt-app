@@ -282,6 +282,9 @@
   <button id="retry-btn" onclick="reconnect()">🔄 &nbsp;ΕΠΑΝΑΣΥΝΔΕΣΗ</button>
 </div>
 
+<!-- Audio element μόνιμο στη σελίδα — λύνει το autoplay block σε Android -->
+<audio id="remote-audio" autoplay playsinline style="display:none"></audio>
+
 <script>
 // ════════════════════════════════════════════════════════════
 //  ΜΟΝΑΔΙΚΗ ΡΥΘΜΙΣΗ: URL του signaling server
@@ -318,6 +321,21 @@ let pttDown = false;
 let remoteActive = false;
 let retryTimer = null;
 let wakeLock = null;
+let audioUnlocked = false;
+
+const $remoteAudio = document.getElementById('remote-audio');
+
+// Unlock audio context με το πρώτο άγγιγμα (απαίτηση Android/iOS)
+async function unlockAudio() {
+  if (audioUnlocked) return;
+  try {
+    $remoteAudio.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+    await $remoteAudio.play().catch(()=>{});
+    $remoteAudio.src = '';
+    $remoteAudio.srcObject = null;
+    audioUnlocked = true;
+  } catch(_) {}
+}
 
 // ── DOM ────────────────────────────────────────────────────
 const $dot       = document.getElementById('dot');
@@ -391,8 +409,8 @@ async function getStream() {
       echoCancellation: true,
       noiseSuppression: true,
       autoGainControl: true,
-      channelCount: 1,
-      sampleRate: 16000   // 16kHz mono — αρκετό για φωνή, λιγότερη μπαταρία
+      channelCount: 1
+      // Δεν ορίζουμε sampleRate — το Android επιλέγει αυτόματα το βέλτιστο
     },
     video: false
   });
@@ -431,13 +449,18 @@ function createPc() {
     }
   };
 
-  // Λήψη audio από remote — ο browser το παίζει αυτόματα
+  // Λήψη audio από remote — χρησιμοποιούμε το μόνιμο audio element
   pc.ontrack = e => {
-    const audio = new Audio();
-    audio.srcObject = e.streams[0];
-    audio.autoplay = true;
-    // Κράτα αναφορά ώστε να μην γίνει garbage collected
-    window._remoteAudio = audio;
+    $remoteAudio.srcObject = e.streams[0];
+    // Εξασφάλισε ότι παίζει (σε Android μερικές φορές χρειάζεται .play())
+    $remoteAudio.play().catch(() => {
+      // Αν αποτύχει, δοκίμασε μετά από λίγο
+      setTimeout(() => $remoteAudio.play().catch(()=>{}), 500);
+    });
+    // Speaker routing — βγαίνει από το loudspeaker, όχι το earpiece
+    if ($remoteAudio.setSinkId) {
+      $remoteAudio.setSinkId('').catch(()=>{});
+    }
   };
 
   return pc;
@@ -473,9 +496,12 @@ async function handleIce(candidate) {
 // Αυτό εξοικονομεί μπαταρία: ο encoder σταματά να τρέχει
 async function pttOn() {
   if (remoteActive) {
-    vibrate(100); // Busy signal
+    vibrate(100);
     return;
   }
+
+  // Unlock audio με το πρώτο άγγιγμα — λύνει το πρόβλημα ήχου σε Android
+  await unlockAudio();
 
   $pttBtn.classList.add('talking');
   $pttLabel.textContent = 'ΜΙΛΑΤΕ';

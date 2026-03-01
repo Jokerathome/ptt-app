@@ -302,6 +302,21 @@ function send(msg){
 async function handleMsg(m){
   switch(m.type){
 
+    case 'promoted':
+      // Βγήκαμε από αναμονή — ξεκίνα κανονικά
+      myId = m.id;
+      setSig(3, m.peers);
+      setStatus('g', 'ΣΥΝΔΕΔΕΜΕΝΟ');
+      setHint('Σύνδεση...');
+      status('Promoted! peers='+m.peers);
+      // Εδώ εμείς κάνουμε offer (ο άλλος περιμένει)
+      polite = false;
+      closePc(); // Καθαρό ξεκίνημα
+      setupPc();
+      await doOffer();
+      enablePtt();
+      break;
+
     case 'joined':
       myId=m.id;
       setSig(m.status==='active'?3:1, m.peers);

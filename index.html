@@ -304,10 +304,20 @@ async function handleMsg(m){
 
     case 'joined':
       myId=m.id;
-      setSig(3,m.peers);
-      status('id='+myId+' peers='+m.peers);
+      setSig(m.status==='active'?3:1, m.peers);
+      status('id='+myId+' peers='+m.peers+' status='+m.status);
+
+      if(m.status==='waiting'){
+        // Το room είναι γεμάτο — περίμενε
+        setStatus('o','ΑΝΑΜΟΝΗ');
+        setHint('Το κανάλι είναι κατειλημμένο.\nΠεριμένεις στη σειρά (#'+m.queuePos+')...');
+        setSig(0,2);
+        disablePtt();
+        break;
+      }
+
+      // Κανονική σύνδεση (active)
       if(m.peers>=2){
-        // Αν ΔΕΝ υπάρχει ήδη ζωντανή WebRTC σύνδεση, φτιάξε
         if(!pcAlive){
           polite=(parseInt(myId)%2===0);
           setupPc();

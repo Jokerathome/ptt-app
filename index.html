@@ -10,246 +10,126 @@
   <link rel="manifest" href="manifest.json" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
     :root {
-      --green: #00e676;
-      --green-dim: #003311;
-      --orange: #ff6d00;
-      --orange-dim: #1a0e00;
-      --red: #ff1744;
-      --bg: #0a0a0a;
-      --surface: #111111;
-      --border: #1e1e1e;
-      --text: #e0e0e0;
-      --muted: #444;
+      --green: #00e676; --green-dim: #003311;
+      --orange: #ff6d00; --orange-dim: #1a0e00;
+      --red: #ff1744; --bg: #0a0a0a;
+      --surface: #111111; --border: #1e1e1e;
+      --text: #e0e0e0; --muted: #444;
     }
-
     html, body {
-      height: 100%;
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Courier New', monospace;
-      overflow: hidden;
-      touch-action: manipulation;
+      height: 100%; background: var(--bg); color: var(--text);
+      font-family: 'Courier New', monospace; overflow: hidden; touch-action: manipulation;
     }
-
-    /* ── Layout ── */
     #app {
-      height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 16px;
-      gap: 12px;
+      height: 100dvh; display: flex; flex-direction: column;
+      align-items: center; padding: 16px; gap: 12px;
     }
-
-    /* ── Header ── */
-    header {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .logo {
-      font-size: 18px;
-      font-weight: bold;
-      letter-spacing: 4px;
-      color: var(--green);
-    }
+    header { width: 100%; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 18px; font-weight: bold; letter-spacing: 4px; color: var(--green); }
     .status-pill {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 6px 12px;
-      font-size: 11px;
-      letter-spacing: 1px;
+      display: flex; align-items: center; gap: 6px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 6px 12px; font-size: 11px; letter-spacing: 1px;
     }
-    .dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--muted);
-      transition: background 0.3s;
-    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); transition: background 0.3s; }
     .dot.green  { background: var(--green); box-shadow: 0 0 6px var(--green); }
     .dot.orange { background: var(--orange); }
-    .dot.red    { background: var(--red); animation: pulse-red 1s infinite; }
+    .dot.red    { background: var(--red); animation: blink 1s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-    @keyframes pulse-red {
-      0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
-    }
-
-    /* ── Signal bars ── */
     .signal-box {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      width: 100%; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px 16px;
+      display: flex; align-items: center; justify-content: space-between;
     }
     .signal-label { font-size: 10px; letter-spacing: 2px; color: var(--muted); }
-    .signal-bars { display: flex; align-items: flex-end; gap: 3px; height: 20px; }
-    .signal-bars span {
-      width: 5px;
-      background: var(--border);
-      border-radius: 2px;
-      transition: background 0.3s;
-    }
-    .signal-bars span:nth-child(1) { height: 5px; }
-    .signal-bars span:nth-child(2) { height: 9px; }
-    .signal-bars span:nth-child(3) { height: 13px; }
-    .signal-bars span:nth-child(4) { height: 17px; }
-    .signal-bars span:nth-child(5) { height: 21px; }
-    .signal-bars.s1 span:nth-child(1) { background: var(--green); }
-    .signal-bars.s2 span:nth-child(1),
-    .signal-bars.s2 span:nth-child(2) { background: var(--green); }
-    .signal-bars.s3 span:nth-child(1),
-    .signal-bars.s3 span:nth-child(2),
-    .signal-bars.s3 span:nth-child(3) { background: var(--green); }
-    .signal-bars.s4 span:nth-child(1),
-    .signal-bars.s4 span:nth-child(2),
-    .signal-bars.s4 span:nth-child(3),
-    .signal-bars.s4 span:nth-child(4) { background: var(--green); }
-    .signal-bars.s5 span { background: var(--green); }
+    .signal-bars  { display: flex; align-items: flex-end; gap: 3px; height: 22px; }
+    .signal-bars span { width: 5px; background: var(--border); border-radius: 2px; transition: background 0.3s; }
+    .signal-bars span:nth-child(1){height:5px}  .signal-bars span:nth-child(2){height:9px}
+    .signal-bars span:nth-child(3){height:13px} .signal-bars span:nth-child(4){height:17px}
+    .signal-bars span:nth-child(5){height:21px}
+    .signal-bars.s1 span:nth-child(1) { background:var(--green); }
+    .signal-bars.s2 span:nth-child(-n+2) { background:var(--green); }
+    .signal-bars.s3 span:nth-child(-n+3) { background:var(--green); }
+    .signal-bars.s4 span:nth-child(-n+4) { background:var(--green); }
+    .signal-bars.s5 span                 { background:var(--green); }
     .peer-count { font-size: 12px; color: var(--green); letter-spacing: 1px; }
 
-    /* ── Remote speaking indicator ── */
     #remote-bar {
-      width: 100%;
-      border-radius: 10px;
-      padding: 12px 16px;
-      text-align: center;
-      font-size: 14px;
-      letter-spacing: 3px;
-      font-weight: bold;
-      background: var(--orange-dim);
-      border: 1px solid var(--orange);
-      color: var(--orange);
-      opacity: 0;
-      transition: opacity 0.15s;
-      pointer-events: none;
+      width: 100%; border-radius: 10px; padding: 12px 16px; text-align: center;
+      font-size: 14px; letter-spacing: 3px; font-weight: bold;
+      background: var(--orange-dim); border: 1px solid var(--orange); color: var(--orange);
+      opacity: 0; transition: opacity 0.15s; pointer-events: none;
     }
     #remote-bar.active { opacity: 1; }
 
-    /* ── PTT Button ── */
     #ptt-wrap {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      width: 100%;
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 20px; width: 100%;
     }
-
     #ptt-btn {
-      width: min(280px, 75vw);
-      height: min(280px, 75vw);
-      border-radius: 50%;
-      border: 3px solid var(--border);
-      background: var(--surface);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      cursor: pointer;
-      user-select: none;
-      -webkit-user-select: none;
+      width: min(280px, 75vw); height: min(280px, 75vw); border-radius: 50%;
+      border: 3px solid var(--border); background: var(--surface);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 10px; cursor: pointer; user-select: none; -webkit-user-select: none;
       transition: border-color 0.1s, background 0.1s, box-shadow 0.1s;
-      position: relative;
-      overflow: hidden;
     }
-
-    /* Ripple ring */
-    #ptt-btn::after {
-      content: '';
-      position: absolute;
-      inset: -3px;
-      border-radius: 50%;
-      border: 3px solid transparent;
-      transition: border-color 0.1s, box-shadow 0.1s;
-    }
-
     #ptt-btn.talking {
-      border-color: var(--green);
-      background: var(--green-dim);
-      box-shadow: 0 0 30px rgba(0,230,118,0.25), 0 0 60px rgba(0,230,118,0.1);
-      animation: ptt-ring 1s ease-in-out infinite;
+      border-color: var(--green); background: var(--green-dim);
+      animation: glow 1s ease-in-out infinite;
     }
-    #ptt-btn.blocked {
-      border-color: var(--orange);
+    #ptt-btn.blocked { border-color: var(--orange); }
+    #ptt-btn:disabled { opacity: 0.35; }
+    @keyframes glow {
+      0%,100%{ box-shadow: 0 0 30px rgba(0,230,118,0.2); }
+      50%    { box-shadow: 0 0 60px rgba(0,230,118,0.5); }
     }
-
-    @keyframes ptt-ring {
-      0%, 100% { box-shadow: 0 0 30px rgba(0,230,118,0.25); }
-      50% { box-shadow: 0 0 50px rgba(0,230,118,0.5), 0 0 80px rgba(0,230,118,0.2); }
-    }
-
-    .ptt-icon {
-      font-size: 64px;
-      line-height: 1;
-      pointer-events: none;
-    }
-    .ptt-label {
-      font-size: 11px;
-      letter-spacing: 3px;
-      color: var(--muted);
-      pointer-events: none;
-      transition: color 0.1s;
-    }
+    .ptt-icon  { font-size: 64px; line-height: 1; pointer-events: none; }
+    .ptt-label { font-size: 11px; letter-spacing: 3px; color: var(--muted); pointer-events: none; }
     #ptt-btn.talking .ptt-label { color: var(--green); }
     #ptt-btn.blocked .ptt-label { color: var(--orange); }
 
-    /* ── Hint ── */
-    #hint {
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: 1px;
-      text-align: center;
-      line-height: 1.6;
-    }
+    #hint { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-align: center; line-height: 1.6; }
 
-    /* ── Retry button ── */
     #retry-btn {
-      display: none;
-      background: none;
-      border: 1px solid var(--red);
-      color: var(--red);
-      font-family: 'Courier New', monospace;
-      font-size: 12px;
-      letter-spacing: 3px;
-      padding: 12px 24px;
-      border-radius: 8px;
-      cursor: pointer;
-      width: 100%;
+      display: none; background: none; border: 1px solid var(--red); color: var(--red);
+      font-family: 'Courier New', monospace; font-size: 12px; letter-spacing: 3px;
+      padding: 12px 24px; border-radius: 8px; cursor: pointer; width: 100%;
     }
     #retry-btn.show { display: block; }
 
-    /* ── Audio level meter ── */
-    #meter {
-      width: 100%;
-      height: 4px;
-      border-radius: 2px;
-      background: var(--border);
-      overflow: hidden;
+    #meter { width: 100%; height: 4px; border-radius: 2px; background: var(--border); overflow: hidden; }
+    #meter-bar { height: 100%; width: 0%; background: var(--green); border-radius: 2px; transition: width 0.05s; }
+
+    /* Οθόνη άδειας μικροφώνου */
+    #mic-screen {
+      position: fixed; inset: 0; background: var(--bg); z-index: 100;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 24px; padding: 32px;
     }
-    #meter-bar {
-      height: 100%;
-      width: 0%;
-      background: var(--green);
-      border-radius: 2px;
-      transition: width 0.05s;
+    #mic-screen h2 { color: var(--green); letter-spacing: 3px; font-size: 16px; text-align: center; }
+    #mic-screen p  { color: var(--muted); font-size: 12px; text-align: center; line-height: 1.9; max-width: 280px; }
+    #mic-btn {
+      background: var(--green-dim); border: 2px solid var(--green); color: var(--green);
+      font-family: 'Courier New', monospace; font-size: 14px; letter-spacing: 2px;
+      padding: 18px 32px; border-radius: 12px; cursor: pointer; width: 100%;
     }
   </style>
 </head>
 <body>
-<div id="app">
+
+<!-- Πρώτη οθόνη: ζητά άδεια με user gesture (απαίτηση browser) -->
+<div id="mic-screen">
+  <span style="font-size:72px">🎙️</span>
+  <h2>PTT RADIO</h2>
+  <p>Πάτα το κουμπί για να δώσεις άδεια μικροφώνου και να ξεκινήσει η εφαρμογή.</p>
+  <button id="mic-btn" onclick="requestMicAndStart()">▶ &nbsp;ΕΝΑΡΞΗ</button>
+  <p id="mic-err" style="color:var(--red);display:none">Δεν δόθηκε άδεια μικροφώνου.<br>Ελέγξε τις ρυθμίσεις του Chrome.</p>
+</div>
+
+<!-- Κύρια εφαρμογή -->
+<div id="app" style="display:none">
   <header>
     <span class="logo">📻 PTT</span>
     <div class="status-pill">
@@ -273,35 +153,28 @@
       <span class="ptt-icon">🎙️</span>
       <span class="ptt-label" id="ptt-label">ΚΡΑΤΑ ΓΙΑ PTT</span>
     </button>
-
     <div id="meter"><div id="meter-bar"></div></div>
-
     <p id="hint">Αναμονή σύνδεσης...</p>
   </div>
 
   <button id="retry-btn" onclick="reconnect()">🔄 &nbsp;ΕΠΑΝΑΣΥΝΔΕΣΗ</button>
 </div>
 
-<!-- Audio element μόνιμο στη σελίδα — λύνει το autoplay block σε Android -->
+<!-- ΚΛΕΙΔΙ: μόνιμο audio element με playsinline για Android -->
 <audio id="remote-audio" autoplay playsinline style="display:none"></audio>
 
 <script>
-// ════════════════════════════════════════════════════════════
-//  ΜΟΝΑΔΙΚΗ ΡΥΘΜΙΣΗ: URL του signaling server
-//  Μετά το deploy στο Render, βάλε εδώ τη διεύθυνση σου
-// ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════
+//  ΡΥΘΜΙΣΕΙΣ — μόνο αυτές οι 2 γραμμές αλλάζεις
+// ════════════════════════════════════════════════════
 const SERVER = 'wss://ptt-server-92jv.onrender.com';
-
-// Σταθερό room ID — μόνο αυτές οι 2 συσκευές συνδέονται
-// Άλλαξε το σε οποιοδήποτε μυστικό string θέλεις
 const ROOM = 'Τanos-Talia-8583';
-// ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════
 
-const ICE = {
+const ICE_CFG = {
   iceServers: [
     { urls: 'stun:stun.l.google.com:19302' },
     { urls: 'stun:stun1.l.google.com:19302' },
-    // Free TURN — δουλεύει σε 4G/5G πίσω από NAT
     {
       urls: [
         'turn:openrelay.metered.ca:80',
@@ -314,165 +187,169 @@ const ICE = {
   ]
 };
 
-// ── State ──────────────────────────────────────────────────
-let ws, pc, localStream, audioCtx, analyser, animFrame;
-let myId = null;
-let pttDown = false;
-let remoteActive = false;
-let retryTimer = null;
-let wakeLock = null;
-let audioUnlocked = false;
-
+const $dot         = document.getElementById('dot');
+const $statusTxt   = document.getElementById('status-txt');
+const $sigBars     = document.getElementById('sig-bars');
+const $peerTxt     = document.getElementById('peer-txt');
+const $remoteBar   = document.getElementById('remote-bar');
+const $pttBtn      = document.getElementById('ptt-btn');
+const $pttLabel    = document.getElementById('ptt-label');
+const $hint        = document.getElementById('hint');
+const $retryBtn    = document.getElementById('retry-btn');
+const $meterBar    = document.getElementById('meter-bar');
 const $remoteAudio = document.getElementById('remote-audio');
+const $app         = document.getElementById('app');
+const $micScreen   = document.getElementById('mic-screen');
+const $micErr      = document.getElementById('mic-err');
 
-// Unlock audio context με το πρώτο άγγιγμα (απαίτηση Android/iOS)
-async function unlockAudio() {
-  if (audioUnlocked) return;
+let ws, pc;
+let localStream  = null;
+let audioCtx, analyser, animFrame;
+let pttDown      = false;
+let remoteActive = false;
+let retryTimer   = null;
+let wakeLock     = null;
+
+// ════════════════════════════════════════════════════
+//  ΒΗΜΑ 1: Παίρνουμε μικρόφωνο ΜΙΑ ΦΟΡΑ μέσα σε
+//  user gesture ώστε το browser να επιτρέψει και το
+//  audio playback (Android απαίτηση)
+// ════════════════════════════════════════════════════
+async function requestMicAndStart() {
+  const btn = document.getElementById('mic-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳  ΠΑΡΑΚΑΛΩ ΠΕΡΙΜΕΝΕ...';
+
   try {
-    $remoteAudio.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
-    await $remoteAudio.play().catch(()=>{});
-    $remoteAudio.src = '';
-    $remoteAudio.srcObject = null;
-    audioUnlocked = true;
-  } catch(_) {}
+    localStream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellation: true,
+        noiseSuppression: true,
+        autoGainControl: true,
+        channelCount: 1
+        // sampleRate: αφήνουμε τη συσκευή να επιλέξει
+      },
+      video: false
+    });
+
+    // Mute αμέσως — στέλνουμε ήχο ΜΟΝΟ με PTT
+    localStream.getAudioTracks().forEach(t => { t.enabled = false; });
+
+    // Ξεκλείδωμα audio playback μέσα στο user gesture
+    $remoteAudio.volume = 1.0;
+    $remoteAudio.muted  = false;
+    // Ένα σύντομο "play" για να ξεκλειδώσει το autoplay
+    try { await $remoteAudio.play(); } catch(_) {}
+
+    // Δείξε κύρια οθόνη
+    $micScreen.style.display = 'none';
+    $app.style.display = 'flex';
+
+    connect();
+
+  } catch(err) {
+    console.error('Mic:', err);
+    btn.disabled = false;
+    btn.textContent = '🔄  ΔΟΚΙΜΑΣΕ ΞΑΝΑ';
+    $micErr.style.display = 'block';
+  }
 }
 
-// ── DOM ────────────────────────────────────────────────────
-const $dot       = document.getElementById('dot');
-const $statusTxt = document.getElementById('status-txt');
-const $sigBars   = document.getElementById('sig-bars');
-const $peerTxt   = document.getElementById('peer-txt');
-const $remoteBar = document.getElementById('remote-bar');
-const $pttBtn    = document.getElementById('ptt-btn');
-const $pttLabel  = document.getElementById('ptt-label');
-const $hint      = document.getElementById('hint');
-const $retryBtn  = document.getElementById('retry-btn');
-const $meterBar  = document.getElementById('meter-bar');
-
-// ── UI helpers ─────────────────────────────────────────────
-function setStatus(state, txt) {
-  $dot.className = 'dot ' + (state === 'ok' ? 'green' : state === 'wait' ? 'orange' : '');
-  $statusTxt.textContent = txt;
+// ── UI ─────────────────────────────────────────────
+function setStatus(cls, txt) { $dot.className='dot '+cls; $statusTxt.textContent=txt; }
+function setSignal(n, peers) {
+  $sigBars.className = 'signal-bars' + (n ? ' s'+n : '');
+  $peerTxt.textContent = peers > 0 ? peers+(peers===1?' χρήστης':' χρήστες') : '—';
 }
-
-function setSignal(level, peers) {  // level 0-5
-  $sigBars.className = 'signal-bars' + (level ? ' s' + level : '');
-  $peerTxt.textContent = peers > 0 ? (peers === 1 ? '1 χρήστης' : peers + ' χρήστες') : '—';
-}
-
-function setHint(txt) { $hint.textContent = txt; }
-
+function setHint(t) { $hint.textContent = t; }
 function vibrate(ms) { navigator.vibrate && navigator.vibrate(ms); }
 
-// ── Wake lock (οθόνη ανοιχτή κατά τη διάρκεια PTT) ────────
-async function requestWakeLock() {
-  try {
-    if ('wakeLock' in navigator && !wakeLock) {
-      wakeLock = await navigator.wakeLock.request('screen');
-      wakeLock.addEventListener('release', () => { wakeLock = null; });
-    }
-  } catch(_) {}
+async function grabWakeLock() {
+  try { if ('wakeLock' in navigator && !wakeLock) wakeLock = await navigator.wakeLock.request('screen'); } catch(_){}
 }
-async function releaseWakeLock() {
-  if (wakeLock) { await wakeLock.release(); wakeLock = null; }
-}
+function dropWakeLock() { if (wakeLock) { wakeLock.release(); wakeLock=null; } }
 
-// ── Audio level meter ──────────────────────────────────────
-function startMeter(stream) {
-  if (!stream) return;
+function startMeter() {
+  if (!localStream || audioCtx) return;
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const source = audioCtx.createMediaStreamSource(stream);
+  const src = audioCtx.createMediaStreamSource(localStream);
   analyser = audioCtx.createAnalyser();
   analyser.fftSize = 256;
-  source.connect(analyser);
+  src.connect(analyser);
   const buf = new Uint8Array(analyser.frequencyBinCount);
-  function tick() {
+  (function tick() {
     analyser.getByteFrequencyData(buf);
-    const avg = buf.reduce((a, b) => a + b, 0) / buf.length;
-    $meterBar.style.width = Math.min(100, avg * 2) + '%';
+    $meterBar.style.width = Math.min(100, buf.reduce((a,b)=>a+b,0)/buf.length*2.5) + '%';
     animFrame = requestAnimationFrame(tick);
-  }
-  tick();
+  })();
 }
-
 function stopMeter() {
-  if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+  if (animFrame) { cancelAnimationFrame(animFrame); animFrame=null; }
   $meterBar.style.width = '0%';
-  if (audioCtx) { audioCtx.close(); audioCtx = null; }
-  analyser = null;
+  if (audioCtx) { audioCtx.close().catch(()=>{}); audioCtx=null; analyser=null; }
 }
 
-// ── Local stream ───────────────────────────────────────────
-async function getStream() {
-  return await navigator.mediaDevices.getUserMedia({
-    audio: {
-      echoCancellation: true,
-      noiseSuppression: true,
-      autoGainControl: true,
-      channelCount: 1
-      // Δεν ορίζουμε sampleRate — το Android επιλέγει αυτόματα το βέλτιστο
-    },
-    video: false
-  });
-}
-
-function stopStream() {
-  if (localStream) {
-    localStream.getTracks().forEach(t => t.stop());
-    localStream = null;
-  }
-}
-
-// ── WebRTC ─────────────────────────────────────────────────
-function closePc() {
-  if (pc) { pc.close(); pc = null; }
-}
+// ════════════════════════════════════════════════════
+//  WebRTC — Σωστή αρχιτεκτονική
+//
+//  ✅ localStream track μπαίνει στο PC ΑΜΕΣΩΣ (muted)
+//  ✅ PTT = μόνο track.enabled = true/false
+//  ✅ Χωρίς addTrack/replaceTrack μετά τη σύνδεση
+//  ✅ Χωρίς renegotiation → δουλεύει σε Android 10+
+// ════════════════════════════════════════════════════
+function closePc() { if (pc) { pc.close(); pc=null; } }
 
 function createPc() {
   closePc();
-  pc = new RTCPeerConnection(ICE);
+  pc = new RTCPeerConnection(ICE_CFG);
 
   pc.onicecandidate = e => {
-    if (e.candidate) send({ type: 'ice', candidate: e.candidate });
+    if (e.candidate) send({ type:'ice', candidate:e.candidate });
   };
 
-  // Ποιότητα σύνδεσης → signal bars
   pc.oniceconnectionstatechange = () => {
     const s = pc.iceConnectionState;
-    if (s === 'connected' || s === 'completed') setSignal(5, 2);
-    else if (s === 'checking') setSignal(2, 2);
-    else if (s === 'disconnected' || s === 'failed') {
-      setSignal(0, 1);
-      closePc();
-      // Αυτόματη επανεκκίνηση WebRTC
-      setTimeout(reconnect, 3000);
+    console.log('ICE state:', s);
+    if (s==='connected' || s==='completed') {
+      setSignal(5, 2);
+      setHint('Κράτα πατημένο για να μιλήσεις');
+    } else if (s==='checking') {
+      setSignal(2, 2); setHint('Εγκατάσταση σύνδεσης...');
+    } else if (s==='disconnected' || s==='failed') {
+      setSignal(1, 1); setTimeout(reconnect, 3000);
     }
   };
 
-  // Λήψη audio από remote — χρησιμοποιούμε το μόνιμο audio element
+  // Remote audio: ΑΠΕΥΘΕΙΑΣ στο μόνιμο <audio> element
   pc.ontrack = e => {
+    console.log('ontrack:', e.streams.length, 'streams');
+    if (!e.streams[0]) return;
     $remoteAudio.srcObject = e.streams[0];
-    // Εξασφάλισε ότι παίζει (σε Android μερικές φορές χρειάζεται .play())
-    $remoteAudio.play().catch(() => {
-      // Αν αποτύχει, δοκίμασε μετά από λίγο
-      setTimeout(() => $remoteAudio.play().catch(()=>{}), 500);
+    // Πάντα .play() — Android δεν κάνει autoplay χωρίς αυτό
+    $remoteAudio.play().catch(err => {
+      console.warn('remote audio play failed:', err);
+      // Retry
+      setTimeout(() => $remoteAudio.play().catch(()=>{}), 300);
     });
-    // Speaker routing — βγαίνει από το loudspeaker, όχι το earpiece
-    if ($remoteAudio.setSinkId) {
-      $remoteAudio.setSinkId('').catch(()=>{});
-    }
   };
+
+  // ══ ΤΟ ΚΛΕΙΔΙ ══
+  // Βάζουμε το muted local track ΤΩΡΑ στο PC
+  // Το remote side θα ξέρει από την αρχή ότι θα δεχτεί audio
+  if (localStream) {
+    localStream.getTracks().forEach(track => {
+      pc.addTrack(track, localStream);
+    });
+  }
 
   return pc;
 }
 
 async function doOffer() {
   const p = createPc();
-  // Transceivers: μόνο audio, και να λαμβάνω
-  p.addTransceiver('audio', { direction: 'sendrecv' });
-  const offer = await p.createOffer();
+  const offer = await p.createOffer({ offerToReceiveAudio: true });
   await p.setLocalDescription(offer);
-  send({ type: 'offer', sdp: p.localDescription });
+  send({ type:'offer', sdp:p.localDescription });
 }
 
 async function handleOffer(sdp) {
@@ -480,170 +357,124 @@ async function handleOffer(sdp) {
   await p.setRemoteDescription(new RTCSessionDescription(sdp));
   const answer = await p.createAnswer();
   await p.setLocalDescription(answer);
-  send({ type: 'answer', sdp: p.localDescription });
+  send({ type:'answer', sdp:p.localDescription });
 }
 
 async function handleAnswer(sdp) {
   if (pc) await pc.setRemoteDescription(new RTCSessionDescription(sdp));
 }
 
-async function handleIce(candidate) {
-  if (pc) await pc.addIceCandidate(new RTCIceCandidate(candidate));
+async function handleIce(c) {
+  try { if (pc && c) await pc.addIceCandidate(new RTCIceCandidate(c)); } catch(_) {}
 }
 
-// ── Mute/unmute tracks (η πιο αποδοτική PTT μέθοδος) ──────
-// Δεν ξεκινούμε/σταματούμε stream — απλά mute/unmute
-// Αυτό εξοικονομεί μπαταρία: ο encoder σταματά να τρέχει
+// ════════════════════════════════════════════════════
+//  PTT — απλό enable/disable του track
+// ════════════════════════════════════════════════════
 async function pttOn() {
-  if (remoteActive) {
-    vibrate(100);
-    return;
-  }
-
-  // Unlock audio με το πρώτο άγγιγμα — λύνει το πρόβλημα ήχου σε Android
-  await unlockAudio();
-
+  if (remoteActive || !localStream) { vibrate(100); return; }
+  localStream.getAudioTracks().forEach(t => t.enabled = true);
   $pttBtn.classList.add('talking');
   $pttLabel.textContent = 'ΜΙΛΑΤΕ';
-
-  await requestWakeLock();
-  vibrate(40); // Haptic "click" σαν real walkie-talkie
-
-  try {
-    if (!localStream) {
-      localStream = await getStream();
-      // Πρόσθεσε tracks στο peer connection
-      if (pc) {
-        localStream.getTracks().forEach(track => {
-          const sender = pc.getSenders().find(s => s.track?.kind === 'audio');
-          if (sender) sender.replaceTrack(track);
-          else pc.addTrack(track, localStream);
-        });
-      }
-    } else {
-      // Unmute
-      localStream.getAudioTracks().forEach(t => t.enabled = true);
-    }
-    startMeter(localStream);
-  } catch(e) {
-    console.error('Mic:', e);
-    pttOff();
-    return;
-  }
-
-  send({ type: 'ptt', active: true });
+  vibrate(40);
+  await grabWakeLock();
+  startMeter();
+  send({ type:'ptt', active:true });
   setHint('Μιλάτε... Αφήστε για να ακούσετε');
 }
 
 function pttOff() {
-  if (!pttDown && !$pttBtn.classList.contains('talking')) return;
-
+  if (!localStream) return;
+  localStream.getAudioTracks().forEach(t => t.enabled = false);
   $pttBtn.classList.remove('talking');
-
-  // Mute (ΔΕΝ κλείνουμε stream — εξοικονόμηση latency στο επόμενο PTT)
-  if (localStream) {
-    localStream.getAudioTracks().forEach(t => t.enabled = false);
-  }
+  $pttLabel.textContent = 'ΚΡΑΤΑ ΓΙΑ PTT';
   stopMeter();
-  releaseWakeLock();
-  vibrate(20); // Release click
-
-  send({ type: 'ptt', active: false });
-
-  if (!remoteActive) {
-    $pttLabel.textContent = 'ΚΡΑΤΑ ΓΙΑ PTT';
-    setHint('Κράτα πατημένο για να μιλήσεις');
-  }
+  dropWakeLock();
+  vibrate(20);
+  send({ type:'ptt', active:false });
+  if (!remoteActive) setHint('Κράτα πατημένο για να μιλήσεις');
 }
 
-// ── WebSocket ──────────────────────────────────────────────
+// ── WebSocket ───────────────────────────────────────
 function send(msg) {
   if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify(msg));
 }
 
 function connect() {
-  if (ws) ws.close();
-  setStatus('wait', 'ΣΥΝΔΕΣΗ...');
-  setHint('Αναμονή σύνδεσης...');
+  if (ws) { try { ws.close(); } catch(_){} }
+  setStatus('orange', 'ΣΥΝΔΕΣΗ...');
+  setHint('Σύνδεση στον server...');
   $retryBtn.classList.remove('show');
   $pttBtn.disabled = true;
 
-  ws = new WebSocket(SERVER);
+  try { ws = new WebSocket(SERVER); }
+  catch(e) { setStatus('red','ΣΦΑΛΜΑ'); $retryBtn.classList.add('show'); return; }
 
   ws.onopen = () => {
-    send({ type: 'join', room: ROOM });
-    setStatus('ok', 'ΣΥΝΔΕΔΕΜΕΝΟ');
+    send({ type:'join', room:ROOM });
+    setStatus('green', 'ΣΥΝΔΕΔΕΜΕΝΟ');
   };
 
   ws.onmessage = async ({ data }) => {
-    const msg = JSON.parse(data);
-
+    let msg; try { msg=JSON.parse(data); } catch { return; }
     switch(msg.type) {
       case 'joined':
-        myId = msg.id;
         setSignal(3, msg.peers);
-        updatePttState(msg.peers);
-        // Αν είμαι ο 2ος, ξεκίνα WebRTC
-        if (msg.peers >= 2) await doOffer();
+        if (msg.peers >= 2) {
+          await doOffer();
+          $pttBtn.disabled = false;
+          setHint('Κράτα πατημένο για να μιλήσεις');
+        } else {
+          setHint('Αναμονή για τη δεύτερη συσκευή...');
+        }
         break;
-
       case 'peer_joined':
         setSignal(3, msg.peers);
-        updatePttState(msg.peers);
-        // Ο νέος χρήστης θα στείλει offer — εγώ περιμένω
+        if (msg.peers >= 2) {
+          $pttBtn.disabled = false;
+          setHint('Κράτα πατημένο για να μιλήσεις');
+        }
         break;
-
       case 'peer_left':
         setSignal(1, msg.peers);
-        setRemotePtt(false);
-        updatePttState(msg.peers);
+        setRemoteSpeaking(false);
+        $pttBtn.disabled = true;
         closePc();
+        setHint('Η άλλη συσκευή αποσυνδέθηκε...');
         break;
-
-      case 'offer':  await handleOffer(msg.sdp);  break;
+      case 'offer':  await handleOffer(msg.sdp); break;
       case 'answer': await handleAnswer(msg.sdp); break;
       case 'ice':    await handleIce(msg.candidate); break;
-
-      case 'ptt':
-        setRemotePtt(msg.active);
-        break;
+      case 'ptt':    setRemoteSpeaking(msg.active); break;
     }
   };
 
   ws.onerror = () => {
-    setStatus('red', 'ΣΦΑΛΜΑ');
-    setSignal(0, 0);
+    setStatus('red','ΣΦΑΛΜΑ ΣΥΝΔΕΣΗΣ');
     $retryBtn.classList.add('show');
-    setHint('Δεν ήταν δυνατή η σύνδεση');
     retryTimer = setTimeout(connect, 8000);
   };
 
-  ws.onclose = (e) => {
-    if (e.code !== 1000) { // Όχι intentional close
-      setStatus('', 'ΑΠΟΣΥΝΔΕΣΜΕΝΟ');
-      setSignal(0, 0);
-      $pttBtn.disabled = true;
-      setHint('Η σύνδεση χάθηκε...');
-      $retryBtn.classList.add('show');
-      retryTimer = setTimeout(connect, 5000);
-    }
+  ws.onclose = e => {
+    if (e.code===1000) return;
+    setStatus('','ΑΠΟΣΥΝΔΕΣΜΕΝΟ');
+    setSignal(0,0); $pttBtn.disabled=true;
+    $retryBtn.classList.add('show');
+    retryTimer = setTimeout(connect, 5000);
   };
 }
 
 function reconnect() {
-  clearTimeout(retryTimer);
-  closePc();
-  stopStream();
-  connect();
+  clearTimeout(retryTimer); closePc(); connect();
 }
 
-function setRemotePtt(active) {
+function setRemoteSpeaking(active) {
   remoteActive = active;
   $remoteBar.classList.toggle('active', active);
   if (active) {
-    $pttLabel.textContent = 'ΚΑΝΑΛΙ ΚΛΕΙΣΤΟ';
     $pttBtn.classList.add('blocked');
-    setHint('Αναμονή... Ο άλλος μιλάει');
+    $pttLabel.textContent = 'ΚΑΝΑΛΙ ΚΛΕΙΣΤΟ';
+    setHint('Ο άλλος μιλάει... περίμενε');
     vibrate(30);
   } else {
     $pttBtn.classList.remove('blocked');
@@ -654,45 +485,23 @@ function setRemotePtt(active) {
   }
 }
 
-function updatePttState(peers) {
-  if (peers >= 2) {
-    $pttBtn.disabled = false;
-    setHint('Κράτα πατημένο για να μιλήσεις');
-  } else {
-    $pttBtn.disabled = true;
-    setHint('Αναμονή για τη δεύτερη συσκευή...');
-  }
-}
-
-// ── PTT Events (mouse + touch) ─────────────────────────────
+// ── PTT Events ──────────────────────────────────────
 $pttBtn.addEventListener('pointerdown', async e => {
   e.preventDefault();
-  if ($pttBtn.disabled) return;
-  pttDown = true;
-  await pttOn();
+  if ($pttBtn.disabled || pttDown) return;
+  pttDown = true; await pttOn();
 });
-
 $pttBtn.addEventListener('pointerup', e => {
   e.preventDefault();
-  pttDown = false;
-  pttOff();
+  if (!pttDown) return;
+  pttDown = false; pttOff();
 });
-
-$pttBtn.addEventListener('pointerleave', e => {
-  if (pttDown) { pttDown = false; pttOff(); }
-});
-
-// Αποτροπή context menu σε long press
+$pttBtn.addEventListener('pointercancel', () => { if(pttDown){pttDown=false;pttOff();} });
+$pttBtn.addEventListener('pointerleave',  () => { if(pttDown){pttDown=false;pttOff();} });
 $pttBtn.addEventListener('contextmenu', e => e.preventDefault());
 
-// ── Start ─────────────────────────────────────────────────
-connect();
-
-// Reconnect όταν επιστρέφει η σύνδεση
 document.addEventListener('visibilitychange', () => {
-  if (!document.hidden && (!ws || ws.readyState !== WebSocket.OPEN)) {
-    reconnect();
-  }
+  if (!document.hidden && ws?.readyState !== WebSocket.OPEN) reconnect();
 });
 </script>
 </body>
